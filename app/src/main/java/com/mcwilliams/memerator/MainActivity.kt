@@ -9,14 +9,16 @@ import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.*
+import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mcwilliams.memerator.ui.dashboard.StravaDashboard
-import com.mcwilliams.memerator.ui.dashboard.MemeratorViewModel
+import com.mcwilliams.memerator.ui.StravaDashboard
+import com.mcwilliams.memerator.ui.MemeratorViewModel
 import com.mcwilliams.memerator.ui.theme.MemeratorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalUnitApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Keep
@@ -55,49 +57,6 @@ class MainActivity : ComponentActivity() {
 //                                    }
                         }
                     },
-//                            bottomBar = {
-//                                BottomNavigation(
-//                                    elevation = 16.dp,
-//                                    backgroundColor = primaryBlueShade2
-//                                ) {
-//                                    val navBackStackEntry by navController.currentBackStackEntryAsState()
-//                                    val currentRoute = navBackStackEntry?.destination?.route
-//                                    items.forEach { screen ->
-//                                        BottomNavigationItem(
-//                                            icon = {
-//                                                Icon(
-//                                                    painter = painterResource(id = screen.resId!!),
-//                                                    contentDescription = "",
-//                                                    modifier = Modifier.size(24.dp)
-//                                                )
-////                                            val animationSpec =
-////                                                remember { LottieAnimationSpec.RawRes(screen.resId!!) }
-////
-////                                            LottieAnimation(
-////                                                animationSpec,
-////                                                modifier = Modifier.size(24.dp)
-////                                            )
-//                                            },
-//                                            label = { Text(screen.label!!) },
-//                                            selected = currentRoute == screen.destination,
-//                                            onClick = {
-//                                                navController.navigate(screen.destination) {
-//                                                    // Pop up to the start destination of the graph to
-//                                                    // avoid building up a large stack of destinations
-//                                                    // on the back stack as users select items
-//                                                    popUpTo(navController.graph.startDestinationRoute!!) {
-//                                                        saveState = true
-//                                                    }
-//                                                    // Avoid multiple copies of the same destination when
-//                                                    // reselecting the same item
-//                                                    launchSingleTop = true
-//                                                    restoreState = true
-//                                                }
-//                                            }
-//                                        )
-//                                    }
-//                                }
-//                            }
                 )
             }
         }
@@ -112,7 +71,4 @@ sealed class NavigationDestination(
 ) {
     object StravaDashboard :
         NavigationDestination("stravaDashboard", "Dashboard", R.drawable.ic_dash)
-
-//    object StreakSettings :
-//        NavigationDestination("streakSettings", "Settings", R.drawable.ic_settings)
 }

@@ -1,4 +1,4 @@
-package com.mcwilliams.memerator.ui.dashboard
+package com.mcwilliams.memerator.ui
 
 import android.util.Log
 import androidx.lifecycle.LiveData

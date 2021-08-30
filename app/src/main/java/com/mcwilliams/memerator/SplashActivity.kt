@@ -7,9 +7,11 @@ import androidx.activity.viewModels
 import androidx.annotation.Keep
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
-import com.mcwilliams.memerator.ui.dashboard.MemeratorViewModel
+import androidx.compose.ui.unit.ExperimentalUnitApi
+import com.mcwilliams.memerator.ui.MemeratorViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalUnitApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Keep
@@ -23,7 +25,5 @@ class SplashActivity : ComponentActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
-
-
     }
 }

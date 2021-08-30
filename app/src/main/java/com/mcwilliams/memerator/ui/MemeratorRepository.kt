@@ -1,4 +1,4 @@
-package com.mcwilliams.memerator.ui.dashboard
+package com.mcwilliams.memerator.ui
 
 import android.content.Context
 import android.content.SharedPreferences

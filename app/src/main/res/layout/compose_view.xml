@@ -5,22 +5,7 @@
     android:orientation="vertical">
 
     <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/title_compose_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <androidx.compose.ui.platform.ComposeView
         android:id="@+id/compose_view"
-        android:layout_width="wrap_content"
-        android:background="@color/primary_shade"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginEnd="16dp"/>
-
-    <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/share_compose_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>
