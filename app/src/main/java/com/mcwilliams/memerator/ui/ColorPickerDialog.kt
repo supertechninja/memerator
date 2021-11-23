@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.mcwilliams.memerator.ui.ColorState
+import com.mcwilliams.memerator.ui.utils.ColorState
 import kotlin.math.roundToInt
 
 @Composable

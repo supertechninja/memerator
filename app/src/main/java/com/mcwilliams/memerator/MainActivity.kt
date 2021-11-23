@@ -7,17 +7,21 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mcwilliams.memerator.ui.StravaDashboard
+import com.mcwilliams.memerator.ui.MemeratorContent
 import com.mcwilliams.memerator.ui.MemeratorViewModel
 import com.mcwilliams.memerator.ui.theme.MemeratorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalAnimationApi
+@ExperimentalComposeUiApi
 @ExperimentalUnitApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -44,7 +48,7 @@ class MainActivity : ComponentActivity() {
                             startDestination = NavigationDestination.StravaDashboard.destination
                         ) {
                             composable(NavigationDestination.StravaDashboard.destination) {
-                                StravaDashboard(
+                                MemeratorContent(
                                     viewModel = viewModel,
                                     paddingValues = paddingValues
                                 )

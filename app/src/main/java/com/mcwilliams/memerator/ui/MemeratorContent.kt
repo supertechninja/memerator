@@ -54,6 +54,7 @@ import androidx.compose.ui.window.Dialog
 import coil.compose.rememberImagePainter
 import com.mcwilliams.memerator.R
 import com.mcwilliams.memerator.ui.theme.MemeratorTheme
+import com.mcwilliams.memerator.ui.utils.*
 import com.muddzdev.quickshot.QuickShot
 import java.time.LocalDate
 import java.time.LocalTime
@@ -67,7 +68,7 @@ enum class TopAppBarType { Search, Default }
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
-fun StravaDashboard(viewModel: MemeratorViewModel, paddingValues: PaddingValues) {
+fun MemeratorContent(viewModel: MemeratorViewModel, paddingValues: PaddingValues) {
     val imageList by viewModel.images.observeAsState(emptyList())
     var memeImageToSave: ComposeView? = null
     var context: Context? = null
@@ -132,10 +133,8 @@ fun StravaDashboard(viewModel: MemeratorViewModel, paddingValues: PaddingValues)
 
                         IconButton(onClick = {
                             memeImageToSave?.let {
-                                Log.d("TAG", "StravaDashboard: $it")
                                 share(it, "Meme", context = context!!)
                             }
-
                         }) {
                             Icon(imageVector = Icons.Default.Share, contentDescription = null)
                         }
@@ -156,13 +155,7 @@ fun StravaDashboard(viewModel: MemeratorViewModel, paddingValues: PaddingValues)
 
                 var textSize by remember { mutableStateOf(22f) }
 
-                var showColorPickerDialog by remember { mutableStateOf(false) }
-
                 var textColor by remember { mutableStateOf(Color.Black) }
-                val textColorState = rememberColorState(color = Color.Black, updateColor = {
-                    textColor = it
-                    showColorPickerDialog = false
-                })
 
                 var filteredList by remember { mutableStateOf(mutableListOf<String>()) }
 
@@ -270,128 +263,21 @@ fun StravaDashboard(viewModel: MemeratorViewModel, paddingValues: PaddingValues)
                 }
 
                 if (textInputType == TextType.TOP || textInputType == TextType.BOTTOM) {
-                    Dialog(onDismissRequest = {
-                        textInputType = TextType.NONE
-                    }) {
-                        var topTextInput by remember { mutableStateOf(TextFieldValue(topText)) }
-
-                        var bottomTextInput by remember { mutableStateOf(TextFieldValue(bottomText)) }
-
-                        Column(
-                            modifier = Modifier
-                                .background(Color.DarkGray)
-                                .padding(16.dp)
-                        ) {
-                            val titleText = when (textInputType) {
-                                TextType.TOP -> "Top Text"
-                                TextType.BOTTOM -> "Bottom Text"
-                                TextType.NONE -> ""
-                            }
-                            Text(
-                                text = "Meme Options",
-                                color = Color.White,
-                                style = MaterialTheme.typography.h6
-                            )
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
-                            OutlinedTextField(
-                                value = topTextInput,
-                                onValueChange = {
-                                    topTextInput = it
-                                }, modifier = Modifier
-                                    .padding(vertical = 16.dp)
-                                    .focusRequester(focusRequester),
-                                label = {
-                                    Text(
-                                        text = "Top Text",
-                                        color = Color.White
-                                    )
-                                },
-                                trailingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Default.Close,
-                                        contentDescription = "Close",
-                                        modifier = Modifier.clickable {
-                                            topTextInput = TextFieldValue("")
-                                        })
-                                },
-                                maxLines = 1
-                            )
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
-
-                            OutlinedTextField(
-                                value = bottomTextInput,
-                                onValueChange = {
-                                    bottomTextInput = it
-                                }, modifier = Modifier
-                                    .padding(vertical = 16.dp)
-                                    .focusRequester(focusRequester),
-                                label = {
-                                    Text(
-                                        text = "Bottom Text",
-                                        color = Color.White
-                                    )
-                                },
-                                trailingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Default.Close,
-                                        contentDescription = "Close",
-                                        modifier = Modifier.clickable {
-                                            bottomTextInput = TextFieldValue("")
-                                        })
-                                },
-                                maxLines = 1
-                            )
-
-                            Slider(
-                                value = textSize,
-                                onValueChange = { textSize = it },
-                                valueRange = 14f..42f,
-                                steps = 10
-                            )
-
-                            Text(text = "Text Size: ${textSize.toInt()}")
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(text = "Text Color", modifier = Modifier.padding(end = 8.dp))
-
-                                Surface(
-                                    shape = CircleShape,
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .clickable {
-                                            showColorPickerDialog = true
-                                        },
-                                    color = textColor
-                                ) {}
-                            }
-
-                            Row(
-                                horizontalArrangement = Arrangement.End,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                TextButton(onClick = { textInputType = TextType.NONE }) {
-                                    Text(text = "CANCEL")
-                                }
-                                TextButton(onClick = {
-                                    topText = topTextInput.text
-                                    bottomText = bottomTextInput.text
-                                    textInputType = TextType.NONE
-                                }) {
-                                    Text(text = "SAVE")
-                                }
-                            }
+                    MemeConfigDialog(
+                        topText = topText,
+                        bottomText = bottomText,
+                        textSize = textSize,
+                        textColor = textColor,
+                        focusRequester = focusRequester,
+                        dismissDialog = { textInputType = TextType.NONE },
+                        saveChange = { newTop, newBottom, newTextSize, newTextColor ->
+                            topText = newTop
+                            bottomText = newBottom
+                            textSize = newTextSize
+                            textColor = newTextColor
+                            textInputType = TextType.NONE
                         }
-
-                        AnimatedVisibility(showColorPickerDialog) {
-                            ColorPicker(textColorState)
-                        }
-                    }
+                    )
 
                     LaunchedEffect(key1 = Unit) {
                         focusRequester.requestFocus()
@@ -403,7 +289,6 @@ fun StravaDashboard(viewModel: MemeratorViewModel, paddingValues: PaddingValues)
 }
 
 enum class TextType { TOP, BOTTOM, NONE }
-
 
 @Composable
 fun MemeImageView(
@@ -425,109 +310,3 @@ fun MemeImageView(
         return@AndroidView androidView
     })
 }
-
-private fun share(view: ComposeView, name: String, context: Context) {
-    view.toBitmap(
-        onBitmapReady = { bitmap ->
-            Log.d("TAG", "share: bitmap ready")
-            val fileName =
-                "$name-${LocalDate.now()}-${LocalTime.now().hour}-${LocalTime.now().minute}"
-            QuickShot.of(bitmap, view.context)
-                .setResultListener(HandleSavedImage(context, fileName))
-                .setFilename(fileName)
-                .setPath("Memerator")
-                .toJPG()
-                .save();
-        },
-        onBitmapError = {
-            Log.d("TAG", it.localizedMessage)
-        }
-    )
-}
-
-class HandleSavedImage(val context: Context, val fileName: String) :
-    QuickShot.QuickShotListener {
-    override fun onQuickShotSuccess(path: String?) {
-        Toast.makeText(context, "Meme Saved", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onQuickShotFailed(path: String?) {
-        Toast.makeText(context, "Error Saving", Toast.LENGTH_SHORT).show()
-    }
-}
-
-fun String.buildMemeImageUrl(): String {
-    val imageName = this.replace(" ", "-")
-    Log.d("TAG", "buildMemeImageUrl: $imageName")
-    return "https://apimeme.com/meme?meme=$imageName&top=&bottom="
-}
-
-// start of extension.
-fun View.toBitmap(onBitmapReady: (Bitmap) -> Unit, onBitmapError: (Exception) -> Unit) {
-
-    try {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            val temporalBitmap =
-                Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
-
-            // Above Android O, use PixelCopy due
-            // https://stackoverflow.com/questions/58314397/
-            val window: Window = (this.context as Activity).window
-
-            val location = IntArray(2)
-
-            this.getLocationInWindow(location)
-
-            val viewRectangle =
-                Rect(location[0], location[1], location[0] + this.width, location[1] + this.height)
-
-            val onPixelCopyListener: PixelCopy.OnPixelCopyFinishedListener =
-                PixelCopy.OnPixelCopyFinishedListener { copyResult ->
-
-                    if (copyResult == PixelCopy.SUCCESS) {
-
-                        onBitmapReady(temporalBitmap)
-                    } else {
-
-                        error("Error while copying pixels, copy result: $copyResult")
-                    }
-                }
-
-            PixelCopy.request(
-                window, viewRectangle, temporalBitmap, onPixelCopyListener, Handler(
-                    Looper.getMainLooper()
-                )
-            )
-        } else {
-
-            val temporalBitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.RGB_565)
-
-            val canvas = android.graphics.Canvas(temporalBitmap)
-
-            this.draw(canvas)
-
-            canvas.setBitmap(null)
-
-            onBitmapReady(temporalBitmap)
-        }
-
-    } catch (exception: Exception) {
-
-        onBitmapError(exception)
-    }
-}
-
-class ColorState(
-    val color: Color,
-    val updateColor: (Color) -> Unit
-)
-
-@Composable
-fun rememberColorState(
-    color: Color = Color.Black, updateColor: (Color) -> Unit = {}
-) = ColorState(
-    color = color,
-    updateColor = updateColor
-)
